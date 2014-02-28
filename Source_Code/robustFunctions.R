@@ -47,7 +47,7 @@ HnFun<-function(Qs,full=TRUE){
   return(Hn)
 }
 
-trimMean<-function(Qs,a,anneal=T,smart=F,...){
+trimMean<-function(Qs,a,anneal=T,smart=F,only=T,...){
   #Trim the most extreme a% based on the HnFun results
   #Qs - the sample
   #a - percent of sample to remove
@@ -55,6 +55,21 @@ trimMean<-function(Qs,a,anneal=T,smart=F,...){
   #... - additional arguements passed to mean function
   if(class(Qs)!="Q4")
     Qs<-as.Q4(Qs)
+  
+  if(smart){
+    Hn<-HnFun(Qs)
+    ord<-order(Hn)
+    Qs<-Qs[ord,]
+    Hn<-Hn[ord]
+    cutAt<-which.max(diff(Hn))+1
+    tQs<-Qs[-c(cutAt:length(Hn)),]
+    
+    if(only){
+      return(mean(tQs,...))
+    }else{
+      return(list(Qs=tQs,Shat=mean(tQs,...)))
+    }
+  }
   
   n<-nrow(Qs)
   nCut<-floor(min(max(0,n*a),n)) #remove at least 0, at most n
@@ -64,17 +79,11 @@ trimMean<-function(Qs,a,anneal=T,smart=F,...){
     Qs<-Q4(Qs)
   
   if(nCut==0){
-    return(list(Qs=Qs,Shat=mean(Qs)))
-  }
-  
-  if(smart){
-    Hn<-HnFun(Qs)
-    ord<-order(Hn)
-    Qs<-Qs[ord,]
-    Hn<-Hn[ord]
-    cutAt<-which.max(diff(Hn))+1
-    tQs<-Qs[-c(cutAt:length(Hn)),]
-    return(list(Qs=tQs,Shat=mean(tQs,...)))
+    if(only){
+      return(mean(Qs,...))
+    }else{
+      return(list(Qs=Qs,Shat=mean(Qs,...)))
+    }
   }
   
   if(anneal){
@@ -83,18 +92,56 @@ trimMean<-function(Qs,a,anneal=T,smart=F,...){
       Hn<-HnFun(Qs)
       Qs<-Qs[-which.max(Hn),]
     }
-    return(list(Qs=Qs,Shat=mean(Qs,...)))
+    if(only){
+      return(mean(Qs,...))
+    }else{
+      return(list(Qs=Qs,Shat=mean(Qs,...)))
+    }
     
   }else{
     Hn<-HnFun(Qs)
     toCut<-which(order(Hn)>(n-nCut))
     tQs<-Qs[-toCut,]
-    return(list(Qs=tQs,Shat=mean(tQs,...)))
+    if(only){
+      return(mean(tQs,...))
+    }else{
+      return(list(Qs=tQs,Shat=mean(tQs,...)))
+    }
   }
   
 }
 
-
+bootSE<-function(samp,est,m,origEst,weight=F,...){
+  
+  #samp - the sample
+  #est - estimator to estimate the SE of
+  #m - number of replicates to use to estimate SE
+  #origEst - the sample estimate
+  #weight - if its the weighted mean then weights need to be updated
+  
+  n<-nrow(samp)
+  SEhat<-0
+  
+  if(weight){
+    
+    for(i in 1:m){
+      sampi<-samp[sample(1:n,replace=T),]
+      Hns<-HnFun(sampi)
+      esti<-est(sampi,w=(1/Hns),...)
+      SEhat<-SEhat+rot.dist(origEst,esti)^2
+    }
+    
+  }else{
+    for(i in 1:m){
+      sampi<-samp[sample(1:n,replace=T),]
+      esti<-est(sampi,...)
+      SEhat<-SEhat+rot.dist(origEst,esti)^2
+    }
+  }
+  
+  return(SEhat/n)
+  
+}
 
 trimMeanOld<-function(Qs,a,discordFun,anneal=F,...){
   #Trim the most extreme a% based on the HnFun results
