@@ -12,14 +12,17 @@ ruarsCont<-function(n,rangle,kappa1,kappa2=kappa1,p,S=id.SO3,Scont,space='SO3'){
   nCont<-floor(p*n)
 
   nNorm <- n-nCont
-  
-  rsCont<-rangle(nCont,kappa=kappa2)
-  RsCont<-genR(rsCont,Scont) #Simulated from the contaminated distribution
-  
+
   rsNorm<-rangle(nNorm,kappa=kappa1)
   RsNorm<-genR(rsNorm,S)	#Simulate from the normal distribution
   
-  Rs<-as.SO3(rbind(RsNorm,RsCont))
+  if(nCont>0){
+    rsCont<-rangle(nCont,kappa=kappa2)
+    RsCont<-genR(rsCont,Scont) #Simulated from the contaminated distribution
+    Rs<-as.SO3(rbind(RsNorm,RsCont))
+  }else{
+    Rs<-RsNorm
+  }
   
   if(space=='Q4')
     Rs<-as.Q4(Rs)
@@ -44,8 +47,56 @@ HnFun<-function(Qs,full=TRUE){
   return(Hn)
 }
 
+trimMean<-function(Qs,a,anneal=T,smart=F,...){
+  #Trim the most extreme a% based on the HnFun results
+  #Qs - the sample
+  #a - percent of sample to remove
+  #anneal - T/F, remove all at once (F) or one at a time (T)
+  #... - additional arguements passed to mean function
+  if(class(Qs)!="Q4")
+    Qs<-as.Q4(Qs)
+  
+  n<-nrow(Qs)
+  nCut<-floor(min(max(0,n*a),n)) #remove at least 0, at most n
+  
+  #Written for quaternions so change to quaternions if given matrices
+  if(class(Qs)=="SO3")
+    Qs<-Q4(Qs)
+  
+  if(nCut==0){
+    return(list(Qs=Qs,Shat=mean(Qs)))
+  }
+  
+  if(smart){
+    Hn<-HnFun(Qs)
+    ord<-order(Hn)
+    Qs<-Qs[ord,]
+    Hn<-Hn[ord]
+    cutAt<-which.max(diff(Hn))+1
+    tQs<-Qs[-c(cutAt:length(Hn)),]
+    return(list(Qs=tQs,Shat=mean(tQs,...)))
+  }
+  
+  if(anneal){
+    
+    for(i in 1:nCut){
+      Hn<-HnFun(Qs)
+      Qs<-Qs[-which.max(Hn),]
+    }
+    return(list(Qs=Qs,Shat=mean(Qs,...)))
+    
+  }else{
+    Hn<-HnFun(Qs)
+    toCut<-which(order(Hn)>(n-nCut))
+    tQs<-Qs[-toCut,]
+    return(list(Qs=tQs,Shat=mean(tQs,...)))
+  }
+  
+}
 
-trimMean<-function(Qs,a,discordFun,anneal=F,...){
+
+
+trimMeanOld<-function(Qs,a,discordFun,anneal=F,...){
   #Trim the most extreme a% based on the HnFun results
   #Qs - the sample
   #a - percent of sample to remove
@@ -79,24 +130,3 @@ trimMean<-function(Qs,a,discordFun,anneal=F,...){
   }
 }
 
-trimMean2<-function(Qs,a,anneal=T,...){
-  #Trim the most extreme a% based on the HnFun results
-  #Qs - the sample
-  #a - percent of sample to remove
-  #discordFun - function to identify extreme observations, larger value more extreme obs
-  #anneal - T/F, remove all at once (F) or one at a time (T)
-  #... - additional arguements passed to mean function
-  n<-nrow(Qs)
-  nCut<-floor(min(max(0,n*a),n)) #remove at least 0, at most n
-  
-  #Written for quaternions so change to quaternions if given matrices
-  if(class(Qs)=="SO3")
-    Qs<-Q4(Qs)
-  
-  if(nCut==0){
-    return(list(Qs=Qs,Shat=mean(Qs)))
-  }
-  
-  
-  
-}
