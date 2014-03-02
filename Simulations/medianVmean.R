@@ -3,6 +3,7 @@ library(plyr)
 source("Source_Code/robustFunctions.R")
 sourceCpp('Source_Code/MeanMedianAsy.cpp')
 
+
 Qs<-ruars(20,rcayley,space='Q4',nu=0.25)
 L2<-mean(Qs)
 L2cd<-cdfunsC(Qs,L2)
@@ -43,7 +44,7 @@ n<-c(10,25,50)
 ps<-c(0,.1,.2)
 nps<-expand.grid(n=n,ps=ps)
 
-res<-data.frame(n=rep(nps$n,each=B),ps=rep(nps$ps,each=B),L2Bias=0,L2AV=0,L1Bias=0,L1AV=0)
+res<-data.frame(n=rep(nps$n,each=B),ps=rep(nps$ps,each=B),L2Bias=0,L2AV=0,L1Bias=0,L1AV=0,WSL2=0,GL1Bias=0)
 
 for(i in 1:nrow(res)){
   
@@ -60,18 +61,23 @@ for(i in 1:nrow(res)){
   L1cd<-cdfunsCMedian(Qs,L1)
   res$L1AV[i]<-L1cd[1]/(2*L1cd[2]^2)
   
+  Hn<-HnFun(Qs)
+  res$WSL2[i]<-rot.dist(weighted.mean(Qs,w=1/Hn))
+  
+  GL1<-median(Qs,type='geometric')
+  res$GL1Bias[i]<-rot.dist(GL1)
 }
 
 #Bias comparison
-resSum<-ddply(res,.(n,ps),summarize,L2Bias=mean(L2Bias),L1Bias=mean(L1Bias))
+resSum<-ddply(res,.(n,ps),summarize,L2Bias=mean(L2Bias),L1Bias=mean(L1Bias),WL2Bias=mean(WSL2),GL1Bias=mean(GL1Bias))
 resSum
 MresSum<-melt(resSum,id.vars=c("n","ps"))
-MresSum$variable<-factor(MresSum$variable,labels=c("Mean","Median"))
+MresSum$variable<-factor(MresSum$variable,labels=c("Mean","Median","WMean","GMedian"))
 
 qplot(ps,value,data=MresSum,group=variable,colour=variable,geom='line',
   ylab='Estimated Bias',xlab="p",size=I(2))+facet_grid(.~n,labeller=label_bquote(n == .(x)))+
   scale_x_continuous(breaks=c(0,.1,.2))+coord_fixed()+
-  guides(colour=guide_legend(title='Estimator'))
+  guides(colour=guide_legend(title='Estimator'))+theme_bw()
   
 
 #Efficiency comparison
