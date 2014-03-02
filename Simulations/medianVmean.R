@@ -1,5 +1,6 @@
 library(rotations)
 library(plyr)
+library(reshape2)
 source("Source_Code/robustFunctions.R")
 sourceCpp('Source_Code/MeanMedianAsy.cpp')
 
@@ -61,7 +62,7 @@ for(i in 1:nrow(res)){
   L1cd<-cdfunsCMedian(Qs,L1)
   res$L1AV[i]<-L1cd[1]/(2*L1cd[2]^2)
   
-  Hn<-HnFun(Qs)
+  Hn<-sqrt(HnFun(Qs))
   res$WSL2[i]<-rot.dist(weighted.mean(Qs,w=1/Hn))
   
   GL1<-median(Qs,type='geometric')
