@@ -66,11 +66,26 @@ for(i in 1:nrow(res)){
 resSum<-ddply(res,.(n,ps),summarize,L2Bias=mean(L2Bias),L1Bias=mean(L1Bias))
 resSum
 MresSum<-melt(resSum,id.vars=c("n","ps"))
-qplot(ps,value,data=MresSum,group=variable,colour=variable,geom='line',facets=.~n)
+MresSum$variable<-factor(MresSum$variable,labels=c("Mean","Median"))
+
+qplot(ps,value,data=MresSum,group=variable,colour=variable,geom='line',
+  ylab='Estimated Bias',xlab="p",size=I(2))+facet_grid(.~n,labeller=label_bquote(n == .(x)))+
+  scale_x_continuous(breaks=c(0,.1,.2))+coord_fixed()+
+  guides(colour=guide_legend(title='Estimator'))
+  
 
 #Efficiency comparison
 resSum2<-ddply(res,.(n,ps),summarize,L2Var=mean(L2AV),L1Var=mean(L1AV),Eff=mean(L2AV/L1AV))
 resSum2
 MresSum2<-melt(resSum2,id.vars=c("n","ps"))
 MresSum2NoEff<-MresSum2[MresSum2$variable!='Eff',]
-qplot(ps,value,data=MresSum2NoEff,group=variable,colour=variable,geom='line',facets=.~n)
+
+MresSum2NoEff$variable<-factor(MresSum2NoEff$variable,labels=c("Mean","Median"))
+
+qplot(ps,value,data=MresSum2NoEff,group=variable,colour=variable,geom='line',
+  ylab='Estimated Variance',xlab="p",size=I(2))+facet_grid(.~n,labeller=label_bquote(n == .(x)))+
+  scale_x_continuous(breaks=c(0,.1,.2))+coord_fixed(2)+
+  guides(colour=guide_legend(title='Estimator'))+theme_bw()
+
+qplot(ps,value,data=MresSum2NoEff,group=variable,colour=variable,geom='line',facets=.~n, 
+      xlab='Variance',size=I(2))
