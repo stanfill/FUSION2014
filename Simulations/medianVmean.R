@@ -103,7 +103,7 @@ resSum
 MresSum<-melt(resSum,id.vars=c("n","ps","Sstar"))
 MresSum$variable<-factor(MresSum$variable,labels=c("Proj. Mean","Weighted Mean","Proj. Median","Geom. Median"),
                          levels=c("L2Bias","WL2Bias","L1Bias","GL1Bias"))
-MresSum$Sstar<-factor(MresSum$Sstar,labels=c("r==frac(pi,4)","r==frac(pi,2)"),levels=c(2,1))
+MresSum$Sstar<-factor(MresSum$Sstar,labels=c("r^'*' ==frac(pi,4)","r^'*' ==frac(pi,2)"),levels=c(2,1))
 MresSum$n<-factor(MresSum$n,labels=c("n==10","n==25","n==50"))
 
 
@@ -116,20 +116,25 @@ qplot(ps,value,data=MresSum,colour=variable,group=variable,geom='line',alpha=I(.
 #ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/BiasComp.pdf",width=8,height=4.8)
 
 #library(xtable)
-xtable(resSum[,c(1,2,4,6,5,7)],digits=3)
+#xtable(resSum[,c(1,2,4,6,5,7)],digits=3)
+
+#Timing results
+#library(microbenchmark)
+#Rs<-ruars(100,rcayley)
+#microbenchmark(median(Rs,type='geometric'),weighted.mean(Rs,w=1/sqrt(HnFun(Rs))))
 
 #Efficiency comparison
-resSum2<-ddply(res,.(n,ps),summarize,L2Var=mean(L2AV),L1Var=mean(L1AV),Eff=mean(L2AV/L1AV))
-resSum2
-MresSum2<-melt(resSum2,id.vars=c("n","ps"))
-MresSum2NoEff<-MresSum2[MresSum2$variable!='Eff',]
-
-MresSum2NoEff$variable<-factor(MresSum2NoEff$variable,labels=c("Mean","Median"))
-
-qplot(ps,value,data=MresSum2NoEff,group=variable,colour=variable,geom='line',
-  ylab='Estimated Variance',xlab="p",size=I(2))+facet_grid(.~n,labeller=label_bquote(n == .(x)))+
-  scale_x_continuous(breaks=c(0,.1,.2))+coord_fixed(2)+
-  guides(colour=guide_legend(title='Estimator'))+theme_bw()
-
-qplot(ps,value,data=MresSum2NoEff,group=variable,colour=variable,geom='line',facets=.~n, 
-      xlab='Variance',size=I(2))
+# resSum2<-ddply(res,.(n,ps),summarize,L2Var=mean(L2AV),L1Var=mean(L1AV),Eff=mean(L2AV/L1AV))
+# resSum2
+# MresSum2<-melt(resSum2,id.vars=c("n","ps"))
+# MresSum2NoEff<-MresSum2[MresSum2$variable!='Eff',]
+# 
+# MresSum2NoEff$variable<-factor(MresSum2NoEff$variable,labels=c("Mean","Median"))
+# 
+# qplot(ps,value,data=MresSum2NoEff,group=variable,colour=variable,geom='line',
+#   ylab='Estimated Variance',xlab="p",size=I(2))+facet_grid(.~n,labeller=label_bquote(n == .(x)))+
+#   scale_x_continuous(breaks=c(0,.1,.2))+coord_fixed(2)+
+#   guides(colour=guide_legend(title='Estimator'))+theme_bw()
+# 
+# qplot(ps,value,data=MresSum2NoEff,group=variable,colour=variable,geom='line',facets=.~n, 
+#       xlab='Variance',size=I(2))
