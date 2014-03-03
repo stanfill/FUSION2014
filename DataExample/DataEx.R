@@ -1,5 +1,7 @@
 source("../intervalsSO3/intervals/MedianPaper/PrepareData.R")
 sourceCpp('Source_Code/MeanMedianAsy.cpp')
+source("Source_Code/robustFunctions.R")
+
 
 #####################
 #### Find all locations where mean/median differ substantially
@@ -34,7 +36,20 @@ for(i in 1:m){
   DataExDF$WMeanR[i]<-sum(rot.dist(Qs,WL1,method='intrinsic'))
 }
 
+#Visulize location 698 with 
+i<-3
+ex<-loc.stats[possibles[i],]$location 
+exRots<-as.SO3(data.matrix(dat.out[dat.out$location==ex,3:11]))
+plot(exRots,center=median(exRots),col=c(1,2,3))
 
+modPlot(exRots,center=median(exRots),col=c(1),show_estimates='all',size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_x.png",height=3,width=3)
+
+modPlot(exRots,center=median(exRots),col=c(2),show_estimates='all',size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_y.png",height=3,width=3)
+
+modPlot(exRots,center=median(exRots),col=c(3),show_estimates='all',size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_z.png",height=3,width=3)
 # DataExDF<-data.frame(Location=rep(0,m),MeanNTH=rep(0,m),MedianNTH=rep(0,m),MeanBoot=rep(0,m),MedianBoot=rep(0,m))
 # for(i in 1:m){
 #   ex<-loc.stats[possibles[i],]$location 
