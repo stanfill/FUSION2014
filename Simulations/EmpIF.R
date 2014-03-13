@@ -1,6 +1,6 @@
 #Empirical geometric median influence function
 library(rotations)
-Rs<-ruars(25,rcayley,kappa=1)
+Rs<-ruars(20,rcayley,kappa=1)
 
 ri<-seq(0,pi,length=100)
 med<-median(Rs,type='geometric')
@@ -23,3 +23,50 @@ for(i in 1:length(ri)){
 
 plot(ri,diffG,type='l')
 lines(ri,diffE,col=2)
+
+##############
+#Plot projected IFs
+library(ggplot2)
+library(plyr)
+library(reshape2)
+ri<-seq(0,pi,length=100)
+
+medianIF<-function(r,kappa){
+  a2<-kappa*sqrt(2)*gamma(kappa+2)
+  a2<-a2/(3*sqrt(pi)*gamma(kappa+2.5))
+  return(sin(r)/(2*a2*sqrt(1-cos(r))))
+}
+
+qplot(ri,medianIF(ri,2),geom='line')
+
+meanIF<-function(r,kappa){
+  a2<-kappa/(kappa+2)
+  return(3*sin(r)/a2)
+}
+
+qplot(ri,meanIF(ri,2),geom='line')
+
+IFcomp1<-data.frame(ri=ri,kappa=cayley.kappa(0.25))
+IFcomp1$Mean<-meanIF(IFcomp1$ri,IFcomp1$kappa[1])
+IFcomp1$Median<-medianIF(IFcomp1$ri,IFcomp1$kappa[1])
+
+IFcomp2<-data.frame(ri=ri,kappa=cayley.kappa(0.5))
+IFcomp2$Mean<-meanIF(IFcomp2$ri,IFcomp2$kappa[1])
+IFcomp2$Median<-medianIF(IFcomp2$ri,IFcomp2$kappa[1])
+
+IFcomp3<-data.frame(ri=ri,kappa=cayley.kappa(0.75))
+IFcomp3$Mean<-meanIF(IFcomp3$ri,IFcomp3$kappa[1])
+IFcomp3$Median<-medianIF(IFcomp3$ri,IFcomp3$kappa[1])
+
+#IFcomp<-rbind(IFcomp1,IFcomp2,IFcomp3)
+IFcomp<-rbind(IFcomp1,IFcomp3)
+mIFcomp<-melt(IFcomp,id=c("ri","kappa"))
+mIFcomp$Var<-0.25
+mIFcomp[mIFcomp$kappa==2,]$Var<-0.75
+
+qplot(ri,value,data=mIFcomp,colour=variable,geom='line',lwd=I(2),facets=.~Var)+theme_bw()+coord_fixed(1/2)+
+  labs(list(colour='Estimator',x=expression(r),y=expression(IF(R, hat(S)))))+
+  scale_x_continuous(breaks=c(0,pi/2,pi),labels=c(0,expression(pi/2),expression(pi)))
+
+ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/IFComp.pdf",width=8,height=4)
+
