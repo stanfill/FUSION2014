@@ -29,7 +29,7 @@ lines(ri,diffE,col=2)
 library(ggplot2)
 library(plyr)
 library(reshape2)
-ri<-seq(0,pi,length=100)
+ri<-seq(-pi,pi,length=200)
 
 medianIF<-function(r,kappa){
   a2<-kappa*sqrt(2)*gamma(kappa+2)
@@ -63,10 +63,14 @@ IFcomp<-rbind(IFcomp1,IFcomp3)
 mIFcomp<-melt(IFcomp,id=c("ri","kappa"))
 mIFcomp$Var<-0.25
 mIFcomp[mIFcomp$kappa==2,]$Var<-0.75
+mIFcomp$Estimator<-mIFcomp$variable
+mIFcomp$Estimator<-factor(mIFcomp$Estimator,labels=c('Proj.Mean','Proj.Median'))  
 
-qplot(ri,value,data=mIFcomp,colour=variable,geom='line',lwd=I(2),facets=.~Var)+theme_bw()+coord_fixed(1/2)+
-  labs(list(colour='Estimator',x=expression(r),y=expression(IF(R, hat(S)))))+
-  scale_x_continuous(breaks=c(0,pi/2,pi),labels=c(0,expression(pi/2),expression(pi)))
+qplot(ri,value,data=mIFcomp,colour=Estimator,facets=.~Var)+theme_bw()+coord_fixed(1/2)+
+  labs(list(x=expression(r),y=expression(IF(R, hat(S)))))+
+  geom_hline(yintercept=0,colour='gray50')+geom_vline(xintercept=0,colour='gray50')+geom_line(lwd=I(2))+
+  scale_x_continuous(breaks=c(-pi,-pi/2,0,pi/2,pi),
+  labels=c(expression(-pi),expression(-pi/2),0,expression(pi/2),expression(pi)))
 
-ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/IFComp.pdf",width=8,height=4)
+ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/IFComp.pdf",width=9,height=4)
 
