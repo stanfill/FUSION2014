@@ -1,6 +1,7 @@
 source("../intervalsSO3/intervals/MedianPaper/PrepareData.R")
 sourceCpp('Source_Code/MeanMedianAsy.cpp')
 source("Source_Code/robustFunctions.R")
+source("Source_Code/modPlot.R")
 
 
 #####################
@@ -63,3 +64,22 @@ modPlot(exRots,center=median(exRots),col=c(3),show_estimates='all',size=I(4))+th
 # 
 # DataExDF$Location<-as.factor(DataExDF$Location)
 # xtable(DataExDF,digits=3)
+
+
+
+###################
+#Use a different method
+data(nickel)
+loc111<-nickel[nickel$location==111,]
+#loc2975<-nickel[nickel$location==2975,]
+exRots<-as.SO3(loc111[,5:13])
+exRots
+
+modPlot(exRots,center=median(exRots),col=c(1),show_estimates='all',size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_x.png",height=3,width=3)
+
+modPlot(exRots,center=median(exRots),col=c(2),show_estimates='all',size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_y.png",height=3,width=3)
+
+modPlot(exRots,center=median(exRots),col=c(3),show_estimates='all',size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_z.png",height=3,width=3)
