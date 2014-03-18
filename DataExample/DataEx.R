@@ -69,6 +69,11 @@ modPlot(exRots,center=median(exRots),col=c(3),show_estimates='all',size=I(4))+th
 
 ###################
 #Use a different method
+library(rotations)
+library(xtable)
+sourceCpp('Source_Code/MeanMedianAsy.cpp')
+source("Source_Code/robustFunctions.R")
+source("Source_Code/modPlot.R")
 data(nickel)
 loc111<-nickel[nickel$location==111,]
 #loc2975<-nickel[nickel$location==2975,]
@@ -83,3 +88,9 @@ modPlot(exRots,center=median(exRots),col=c(2),show_estimates='all',size=I(4))+th
 
 modPlot(exRots,center=median(exRots),col=c(3),show_estimates='all',size=I(4))+theme(legend.position='none')
 #ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_z.png",height=3,width=3)
+
+Qs<-as.Q4(exRots)
+Hn<-sqrt(HnFun(Qs))
+Qstab<-cbind(Qs[order(Hn),],sort(Hn))
+xtable(Qstab,digits=3,caption="Example data points expressed as quaternions with corresponding $H_n$ values.")
+
