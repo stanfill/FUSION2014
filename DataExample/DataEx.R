@@ -90,7 +90,7 @@ modPlot(exRots,center=median(exRots),col=c(3),show_estimates='all',size=I(4))+th
 #ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_z.png",height=3,width=3)
 
 Qs<-as.Q4(exRots)
-Hn<-sqrt(HnFun(Qs))
+Hn<-(HnFun(Qs))
 Qstab<-cbind(Qs[order(Hn),],sort(Hn))
 xtable(Qstab,digits=3,caption="Example data points expressed as quaternions with corresponding $H_n$ values.")
 
