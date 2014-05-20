@@ -3,6 +3,21 @@ sourceCpp('Source_Code/MeanMedianAsy.cpp')
 source("Source_Code/robustFunctions.R")
 source("Source_Code/modPlot.R")
 
+#####################
+#### Draw the grain map
+#####################
+
+#Grain map based on median off all 14 scans
+possibles<-which(loc.stats$dE>.075)
+d <- ggplot(loc.stats, aes(xpos, ypos, color=dE1))
+d2 <- d + geom_point(size=4) + scale_colour_gradient(expression(d[R](tilde(S)[E], I["3x3"])), low="grey99", high="grey10", limits=c(0, pi), breaks=c( pi/4, pi/2, 3*pi/4), labels=expression( pi/4, pi/2, 3*pi/4)) + 
+  theme_bw() + xlab("") + ylab("") + coord_equal() + scale_x_continuous(limits=c(0, 12.5), breaks=seq(0, 12.5, by=2.5), labels=expression(0*mu*m, 2.5*mu*m, 5*mu*m, 7.5*mu*m, 10*mu*m, 12.5*mu*m)) + 
+  scale_y_continuous(limits=c(0, 10), breaks=seq(0, 10, by=2.5), labels=expression(0*mu*m, 2.5*mu*m, 5*mu*m, 7.5*mu*m, 10*mu*m)) + 
+  geom_point(shape="o", colour="yellow", size=5, data=loc.stats[possibles,])  + 
+  theme(plot.margin=unit(rep(0,4), "lines"))
+d2
+ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Grain_map_with_circles.png",height=8,width=9)
+
 
 #####################
 #### Find all locations where mean/median differ substantially
@@ -94,3 +109,14 @@ Hn<-(HnFun(Qs))
 Qstab<-cbind(Qs[order(Hn),],sort(Hn))
 xtable(Qstab,digits=3,caption="Example data points expressed as quaternions with corresponding $H_n$ values.")
 
+
+adjLoc1<-nickel[nickel$location==112,]
+mean(as.SO3(adjLoc1[,5:13]))
+
+adjLoc2<-nickel[nickel$location==110,]
+mean(as.SO3(adjLoc2[,5:13]))
+
+adjLoc3 <- nickel[nickel$location==232,]
+mean(as.SO3(adjLoc3[,5:13]))
+
+median(exRots)

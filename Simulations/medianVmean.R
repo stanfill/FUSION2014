@@ -113,7 +113,7 @@ qplot(ps,value,data=MresSum,colour=variable,group=variable,geom='line',alpha=I(.
   guides(colour=guide_legend(title='Estimator'))+theme(legend.position='top')+coord_fixed(1/2)+
   theme(panel.margin = unit(.75, "lines"))
 
-#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/BiasComp.pdf",width=8,height=4.8)
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/BiasComp.jpeg",width=8,height=4.8)
 
 #library(xtable)
 #xtable(resSum[,c(1,2,4,6,5,7)],digits=3)

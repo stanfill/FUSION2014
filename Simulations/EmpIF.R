@@ -72,5 +72,5 @@ qplot(ri,value,data=mIFcomp,colour=Estimator,facets=.~Var)+theme_bw()+coord_fixe
   scale_x_continuous(breaks=c(-pi,-pi/2,0,pi/2,pi),
   labels=c(expression(-pi),expression(-pi/2),0,expression(pi/2),expression(pi)))
 
-ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/IFComp.pdf",width=9,height=4)
+ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/IFComp.png",width=9,height=4)
 
