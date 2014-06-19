@@ -98,11 +98,20 @@ exRots
 modPlot(exRots,center=median(exRots),col=c(1),show_estimates='all',size=I(4))+theme(legend.position='none')
 #ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_x.png",height=3,width=3)
 
+modPlot(exRots,center=median(exRots),col=c(1),size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests.png",height=3,width=3)
+
 modPlot(exRots,center=median(exRots),col=c(2),show_estimates='all',size=I(4))+theme(legend.position='none')
 #ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_y.png",height=3,width=3)
 
+modPlot(exRots,center=median(exRots),col=c(2),size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_y_no_Ests.png",height=3,width=3)
+
 modPlot(exRots,center=median(exRots),col=c(3),show_estimates='all',size=I(4))+theme(legend.position='none')
 #ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Submission/Figures/Eye_z.png",height=3,width=3)
+
+#modPlot(exRots,center=median(exRots),col=c(3),size=I(4))+theme(legend.position='none')
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_z_no_Ests.png",height=3,width=3)
 
 Qs<-as.Q4(exRots)
 Hn<-(HnFun(Qs))
