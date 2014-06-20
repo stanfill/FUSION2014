@@ -146,18 +146,18 @@ Qs<-as.Q4(exRots)
 Hn<-(HnFun(Qs))
 
 modPlot(exRots,center=median(exRots),col=c(1),size=I(2))+theme(legend.position='none')
-ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests.png",height=3,width=3)
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests.png",height=3,width=3)
 
 modPlot(exRots,center=median(exRots),col=c(1),size=I(4))+theme(legend.position='none')+xlim(-.25,.4)+ylim(-.4,.4)
-ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests_zoom.png",height=4,width=3.25)
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests_zoom.png",height=4,width=3.25)
 
 plot(exRots,center=median(exRots),col=c(1),size=I(4))+geom_text(aes(x=c(.17,.17),y=c(.18,-.19),label=c("0.5","1.9")))+
   theme(legend.position='none')+xlim(-.25,.4)+ylim(-.4,.4)
-ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests_labels.png",height=4,width=3.25)
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests_labels.png",height=4,width=3.25)
 
 
 modPlot(exRots,center=median(exRots),col=c(1),show_estimates='all',size=I(2))+theme(legend.position='none')
-ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x.png",height=3,width=3)
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x.png",height=3,width=3)
 
 modPlot(exRots,center=median(exRots),col=c(1),show_estimates='all',size=I(4))+theme(legend.position='none')+xlim(-.25,.4)+ylim(-.4,.4)
-ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_zoom.png",height=4,width=3.25)
+#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_zoom.png",height=4,width=3.25)
