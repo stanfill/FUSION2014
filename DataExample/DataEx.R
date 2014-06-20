@@ -135,6 +135,7 @@ median(exRots)
 #For presentation
 library(rotations)
 library(xtable)
+library(gridExtra)
 sourceCpp('Source_Code/MeanMedianAsy.cpp')
 source("Source_Code/robustFunctions.R")
 source("Source_Code/modPlot.R")
@@ -151,9 +152,11 @@ modPlot(exRots,center=median(exRots),col=c(1),size=I(2))+theme(legend.position='
 modPlot(exRots,center=median(exRots),col=c(1),size=I(4))+theme(legend.position='none')+xlim(-.25,.4)+ylim(-.4,.4)
 #ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests_zoom.png",height=4,width=3.25)
 
-plot(exRots,center=median(exRots),col=c(1),size=I(4))+geom_text(aes(x=c(.17,.17),y=c(.18,-.19),label=c("0.5","1.9")))+
+plot(exRots,center=median(exRots),col=c(1),size=I(4))+
+  geom_text(aes(x=0.17,y=.19,label="H[i]%~~%0.5"),parse=T)+
+  geom_text(aes(x=0.17,y=-.19,label="H[i]%~~%1.9"),parse=T)+
   theme(legend.position='none')+xlim(-.25,.4)+ylim(-.4,.4)
-#ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests_labels.png",height=4,width=3.25)
+ggsave("C:/Users/Sta36z/Dropbox/Conferences/FUSION/Presentation/figures/Eye_x_no_Ests_labels.png",height=4,width=3.25)
 
 
 modPlot(exRots,center=median(exRots),col=c(1),show_estimates='all',size=I(2))+theme(legend.position='none')
