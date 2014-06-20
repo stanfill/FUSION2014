@@ -264,7 +264,7 @@ modPlot<- function(x, center=mean(x), col=1, show_estimates=NULL,  ...) {
         estDF$lab<-c("Proj. Mean","Proj. Median","Geom. Mean","Geom. Median")[rmNA]
       }else{
         estDF<-pointsXYZ_plot(Shats[,1:9], center=center, column=col)
-			  estimates <- list(geom_point(aes(x=X, y=Y, shape=Est),size=3.5, data=data.frame(estDF, Shats)),
+			  estimates <- list(geom_point(aes(x=X, y=Y, shape=Est),size=5.5, data=data.frame(estDF, Shats)),
 												scale_shape_manual(name="Estimates", labels=Estlabels,values=vals))
       }
 		}else{
@@ -273,7 +273,7 @@ modPlot<- function(x, center=mean(x), col=1, show_estimates=NULL,  ...) {
         estDF$lab<-c("Proj. Mean","Proj. Median","Geom. Mean","Geom. Median")[rmNA]
       }else{
 		    estDF<-pointsXYZ_plot(Shats[,1:9], center=center, column=col)
-			  estimates <- list(geom_point(aes(x=X, y=Y, colour=Est),size=3.5, data=data.frame(estDF, Shats)),
+			  estimates <- list(geom_point(aes(x=X, y=Y, colour=Est),size=4.5, data=data.frame(estDF, Shats)),
 												scale_colour_brewer(name="Estimates", palette="Paired", labels=Estlabels))
       }
 		}
